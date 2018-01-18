@@ -16,7 +16,7 @@ const bassLoop = new Tone.Loop(function(time){
   )
   let note = notes[Math.random()*notes.length|0]
   bass.triggerAttackRelease(note, "8n", time)
-  if (Math.random() > 0.666) bass.triggerAttackRelease("C2", "8n", time + '+16n')
+  if (Math.random() > 0.8) bass.triggerAttackRelease("C2", "8n", time + '+16n')
 }, "8n")
 
 const drumLoop = new Tone.Loop(time => {
@@ -43,11 +43,11 @@ const guitarLoop = new Tone.Loop(time => {
     [root + '* 1.05946309436', root + '* 1.05946309436 / 2', root + '* 1.189207115'] // off notes
   )
   let note = notes[Math.random()*notes.length|0]
-  guitar1.triggerAttackRelease(note, "8n", time)
-  guitar2.triggerAttackRelease(note, "8n", time)
+  guitar1.triggerAttackRelease(note, "8n", time, Math.random())
+  guitar2.triggerAttackRelease(note, "8n", time, Math.random())
   if (Math.random() > 0.666) {
-    guitar1.triggerAttackRelease("C5", "16n", time + '+16n/2')
-    guitar2.triggerAttackRelease("C5", "16n", time + '+16n/2')
+    guitar1.triggerAttackRelease("C5", "16n", time + '+16n/2', Math.random())
+    guitar2.triggerAttackRelease("C5", "16n", time + '+16n/2', Math.random())
   }
 }, "8n")
 
