@@ -1,6 +1,8 @@
 import {default as Tone} from 'Tone'
 
-const filter = new Tone.AutoFilter(1,200,3).toMaster()
+import basskickComp from '../bus/basskick-comp'
+
+const filter = new Tone.AutoFilter(1,200,3).connect(basskickComp)
 
 const bass = new Tone.Synth({
 	oscillator: {
