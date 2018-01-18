@@ -5122,6 +5122,10 @@ to-regex@^3.0.1:
     extend-shallow "^2.0.1"
     regex-not "^1.0.0"
 
+tone@^0.11.11:
+  version "0.11.11"
+  resolved "https://registry.yarnpkg.com/tone/-/tone-0.11.11.tgz#7af8521eba6df84a910d457485a13705f8c824e5"
+
 touch@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/touch/-/touch-3.1.0.tgz#fe365f5f75ec9ed4e56825e0bb76d24ab74af83b"
