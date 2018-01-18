@@ -7,6 +7,9 @@
     "start:dev": "webpack -w & nodemon main.js",
     "start": "node main"
   },
+  "babel": {
+    "presets": ["env", "react", "stage-2"]
+  },
   "dependencies": {
     "axios": "^0.17.1",
     "chalk": "^1.1.3",
