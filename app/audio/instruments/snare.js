@@ -1,7 +1,13 @@
 import {default as Tone} from 'Tone'
 
+import reverb from '../bus/reverb'
+
+
 export const snareHit = new Tone.MembraneSynth({}).toMaster()
-const snareLPF = new Tone.Filter(12000, 'lowpass', -24).toMaster()
+
+
+const reverbGain = new Tone.Volume(-12).connect(reverb)
+const snareLPF = new Tone.Filter(12000, 'lowpass', -24).toMaster().connect(reverbGain)
 const snareHPF = new Tone.Filter(80, 'highpass', -24).connect(snareLPF)
 export const snareNoise = new Tone.NoiseSynth({
   envelope: {
