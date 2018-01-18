@@ -1,15 +1,14 @@
 import React from 'react'
-import { render } from 'react-dom'
-import { Provider } from 'react-redux'
 import { BrowserRouter as Router, Route, withRouter } from 'react-router-dom'
 
-import {play, stop} from '../audio'
+import {default as Tone} from 'Tone'
+
+import {TimeControl} from './'
 
 const App = props => (
   <div>
-    stackathon
-    <button onClick={play}>play</button>
-    <button onClick={stop}>stop</button>
+    <h1>stackathon</h1>
+    <TimeControl />
   </div>
 )
 

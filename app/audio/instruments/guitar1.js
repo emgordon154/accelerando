@@ -11,7 +11,7 @@ const dryGain = new Tone.Volume(-6).toMaster()
 
 const pan = new Tone.Panner(-1).connect(dryGain).connect(wetGain)
 
-const distortion = new Tone.Distortion({distortion: .6}).connect(pan)
+const distortion = new Tone.Distortion({distortion: 0.6}).connect(pan)
 
 const guitar1 = new Tone.PolySynth(4, Tone.PluckSynth).connect(distortion)
 

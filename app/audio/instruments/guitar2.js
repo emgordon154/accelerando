@@ -24,7 +24,7 @@ const pan = new Tone.Panner(1).connect(dryGain).connect(wetGain)
 
 // const postfilter = new Tone.Filter(5000, 'lowpass', -24).connect(chorus)
 
-const distortion = new Tone.Distortion({distortion: .5}).connect(pan)
+const distortion = new Tone.Distortion({distortion: 0.5}).connect(pan)
 
 // const prefilter = new Tone.AutoFilter({
 //   frequency: 0.3,

@@ -1,5 +1,9 @@
-const MainReducer = (action, state) => {
-  return state
-}
+import {combineReducers} from 'redux'
 
-export default MainReducer
+import time from './time'
+
+const rootReducer = () => ({})
+
+// const rootReducer = combineReducers({time}) //
+
+export default rootReducer

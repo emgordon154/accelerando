@@ -4,7 +4,7 @@ import basskickComp from '../bus/basskick-comp'
 
 const gain = new Tone.Volume(-1.5).connect(basskickComp)
 
-const filter = new Tone.AutoFilter(1,200,3).connect(gain)
+const filter = new Tone.AutoFilter(1, 200, 3).connect(gain)
 
 const bass = new Tone.Synth({
 	oscillator: {
