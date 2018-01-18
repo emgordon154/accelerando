@@ -2,7 +2,7 @@ import {default as Tone} from 'Tone'
 
 import reverb from '../bus/reverb'
 
-const wetGain = new Tone.Volume(-18).connect(reverb)
+const wetGain = new Tone.Volume(-24).connect(reverb)
 const dryGain = new Tone.Volume(-6).toMaster()
 const hihat = new Tone.MetalSynth({ // do not use default options unless you want an auditory blast
   frequency: 270,
