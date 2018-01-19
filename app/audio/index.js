@@ -2,7 +2,7 @@ import {default as Tone} from 'Tone'
 
 import {bass, kick, snareHit, snareNoise, hihat, guitar1, guitar2, pad} from './instruments'
 
-Tone.Transport.bpm.value = 140
+// Tone.Transport.bpm.value = 120 // no longer needed, handled in redux store
 
 Tone.Transport.loop = true
 Tone.Transport.loopEnd = '24m'

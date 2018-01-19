@@ -8,13 +8,19 @@
     "start": "node main"
   },
   "babel": {
-    "presets": ["env", "react", "stage-2"]
+    "presets": [
+      "env",
+      "react",
+      "stage-2"
+    ]
   },
   "dependencies": {
     "axios": "^0.17.1",
     "chalk": "^1.1.3",
+    "expose-loader": "^0.7.4",
     "express": "^4.14.0",
     "nodemon": "^1.12.5",
+    "phaser-ce": "^2.10.0",
     "prop-types": "^15.6.0",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
