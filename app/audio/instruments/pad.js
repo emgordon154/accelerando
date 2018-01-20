@@ -1,4 +1,4 @@
-import {default as Tone} from 'Tone'
+import {Tone} from '../'
 
 const pad = new Tone.PolySynth(6, Tone.AMSynth).toMaster()
 

@@ -1,4 +1,4 @@
-import {default as Tone} from 'Tone'
+import {Tone} from '../'
 
 import basskickComp from '../bus/basskick-comp'
 

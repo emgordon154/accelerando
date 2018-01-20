@@ -1,4 +1,8 @@
-import {default as Tone} from 'Tone'
+
+// This snare is composed of two synths: a membrane synth for the low-end thwack,
+// and a filtered white noise synth for the high-end snariness.
+
+import {Tone} from '../'
 
 import reverb from '../bus/reverb'
 

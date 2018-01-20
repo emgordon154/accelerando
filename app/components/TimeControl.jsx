@@ -3,14 +3,14 @@
 import React from 'react'
 import {connect} from 'react-redux'
 
-import {Transport} from '../audio'
+import {Tone} from '../audio'
 import {changeBPM} from '../reducers'
 
-const play = function() {Transport.start()}
-const stop = function() {Transport.stop()}
+const play = function() {Tone.Transport.start()}
+const stop = function() {Tone.Transport.stop()}
 
 const mapState = state => {
-    Transport.bpm.value = state.time.bpm
+    Tone.Transport.bpm.value = state.time.bpm
     return {
         bpm: state.time.bpm
     }
@@ -25,7 +25,7 @@ const mapDispatch = dispatch => ({
 
 const TimeControl = props => (
     <div>
-        <div>{Transport.position}</div>
+        <div>{Tone.Transport.position}</div>
         <div>
             BPM
             <input 
