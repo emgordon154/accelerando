@@ -7,9 +7,12 @@ import { BrowserRouter as Router, Route, withRouter } from 'react-router-dom'
 
 const App = props => (
   <div>
-    <h1>stackathon</h1>
+    {/* <img src="/img/space.jpg" id="space-img" /> */}
+    {/* <h1 id="title">stackathon</h1> */}
     {/* <TimeControl /> */}
-    <div id="phaser-game" />
+    <div id="game-container">
+      <div id="phaser-game" />
+    </div>
   </div>
 )
 

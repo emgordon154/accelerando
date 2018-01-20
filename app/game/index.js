@@ -11,18 +11,19 @@ function preload () {
   game.load.image('spaceship', 'assets/spaceship.png')
 }
 
-var player, cursors // declaring outside create so that it can be referenced in update
+// declaring outside create so that it can be referenced in update
+var title, startText, player, cursors, spacebar
 
 function create () {
   game.physics.startSystem(Phaser.Physics.ARCADE)
   game.add.tileSprite(0, 0, 800, 600, 'space')
-  const title = game.add.text(0, 200, 'ACCELERANDO', {
+  title = game.add.text(0, 200, 'ACCELERANDO', {
     boundsAlignH: 'center',
     font: '20pt Monaco',
     fill: 'white'
   })
   title.setTextBounds(0, 0, 800, 600)
-  const startText = game.add.text(0, 400, 'press "space" 😉 when ready', {
+  startText = game.add.text(0, 400, 'press "space" when ready', {
     boundsAlignH: 'center',
     font: '12pt Monaco',
     fill: 'white'
@@ -34,9 +35,17 @@ function create () {
   player.body.collideWorldBounds = true
 
   cursors = game.input.keyboard.createCursorKeys()
+  spacebar = game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR)
+  game.input.keyboard.addKeyCapture(Phaser.KeyCode.SPACEBAR)
+  // console.log('spacebar:', spacebar)
 }
 
 function update () {
-  player.body.velocity.x = 150 * (cursors.right.isDown - cursors.left.isDown)
+  // if (spacebar.isDown) console.log('spacebar is down!')
+  if (title && spacebar.isDown) {
+    title.destroy()
+    startText.destroy()
+  }
+  player.body.velocity.x = 200 * (cursors.right.isDown - cursors.left.isDown)
   player.body.velocity.y = 150 * (cursors.down.isDown - cursors.up.isDown) // lmao "up.isDown"
 }
