@@ -1,4 +1,4 @@
-import {default as Tone} from 'Tone'
+import {Tone} from '../'
 
 import reverb from '../bus/reverb'
 

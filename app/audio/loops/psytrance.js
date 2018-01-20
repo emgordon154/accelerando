@@ -1,5 +1,6 @@
 // this was my first attempt at making a loop. sounds kinda cool i guess.
 // lots of room for refactoring.
+// this might currently be broken. i'm focusing on other things right now.
 
 import { Tone } from '../'
 import { bass, kick, snareHit, snareNoise, hihat, guitar1, guitar2, pad } from '../instruments'
