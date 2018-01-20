@@ -1,9 +1,10 @@
-// this was my first attempt at making a loop. sounds kinda cool i guess
+// this was my first attempt at making a loop. sounds kinda cool i guess.
+// lots of room for refactoring.
 
 import { Tone } from '../'
 import { bass, kick, snareHit, snareNoise, hihat, guitar1, guitar2, pad } from '../instruments'
 
-export default function psytranceLoop() {
+export default function enqueuePsytranceLoop() {
   Tone.Transport.loop = true
   Tone.Transport.loopEnd = '4m'
 
