@@ -7,16 +7,20 @@ const game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-game', {preload, cre
 function preload () {
   // https://opengameart.org/content/space-backdrop
   game.load.image('space', 'assets/spacefield.png')
+
   // https://opengameart.org/content/space-ships-side-scroller
+  // i love this background but it doesn't tile neatly.
+  // could easily be fixed with a bit of color manipulation around either horizontal edge.
   game.load.image('spaceship', 'assets/spaceship.png')
 }
 
-// declaring outside create so that it can be referenced in update
-var title, startText, player, cursors, spacebar
+// Declaring outside create function so that these can be referenced in update function.
+// This is the first time I've used var in a whiiiiile!
+var title, startText, player, cursors, spacebar, background
 
 function create () {
   game.physics.startSystem(Phaser.Physics.ARCADE)
-  game.add.tileSprite(0, 0, 800, 600, 'space')
+  background = game.add.tileSprite(0, 0, 800, 600, 'space')
   title = game.add.text(0, 200, 'ACCELERANDO', {
     boundsAlignH: 'center',
     font: '20pt Monaco',
@@ -43,8 +47,9 @@ function create () {
 function update () {
   // if (spacebar.isDown) console.log('spacebar is down!')
   if (title && spacebar.isDown) {
-    title.destroy()
-    startText.destroy()
+    title.kill()
+    startText.kill()
+    background.autoScroll(-5, 0) // background moves left at 5px/s
   }
   player.body.velocity.x = 200 * (cursors.right.isDown - cursors.left.isDown)
   player.body.velocity.y = 150 * (cursors.down.isDown - cursors.up.isDown) // lmao "up.isDown"
