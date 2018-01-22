@@ -75,19 +75,21 @@ function create () {
   asteroids = game.add.group()
   asteroids.enableBody = true
 
-  hitAsteroid = game.physics.arcade.collide(player, asteroids)
-
   explosion = game.add.sprite(800,600, 'explosion')
   explosion.animations.add('boom', [15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0], 10, false)
 }
 
 var maxBPM = 165, bpmAccel, bpmDisplay // can't go much higher than this without audio crackling
 
+function reload() {window.location.reload()}
+
 function update () {
+  hitAsteroid = game.physics.arcade.collide(player, asteroids)
   if (hitAsteroid) {
     explosion.x = player.x, explosion.y = player.y
-    boom.play('boom')
+    explosion.play('boom')
     player.kill()
+    reload()
   }
 
   // if (spacebar.isDown) console.log('spacebar is down!')
@@ -130,9 +132,31 @@ function update () {
 
     Tone.Transport.bpm.rampTo(Tone.Transport.bpm.value + bpmAccel, 1)
     bpmDisplay.setText(`BPM: ${Tone.Transport.bpm.value.toFixed(1)}`)
+
+    let astSprite = ['med-ast', 'big-ast'][Math.random()*2|0]
+    let astY = 50 + Math.random()*700 | 0
+    let asteroid = asteroids.create(800, astY, astSprite)
+    asteroid.body.velocity.x = currentVelocity * 2
+    asteroid.body.velocity.y = Math.random() * 100 - Math.random() * 100
+    asteroid.outOfBoundsKill = true
   }
+
+  if (player.alive && secondsElapsed >= tMax && Date.now() - startTime > secondsElapsed * 1000) {
+    secondsElapsed++
+  }
+
   if (!guitarOn && Tone.Transport.bpm.value > 115) addGuitar()
   if (!hatOn && Tone.Transport.bpm.value > 130) addHat()
+
+  if (player.alive && Tone.Transport.bpm.value > 130) {
+    for (let i=0; i<3; i++) {
+    let astY = 50 + Math.random()*700 | 0
+    let asteroid = asteroids.create(800, astY, 'tiny-ast')
+    asteroid.body.velocity.x = currentVelocity * 2
+    asteroid.body.velocity.y = Math.random() * 100 - Math.random() * 100
+    asteroid.outOfBoundsKill = true
+    }
+  }
 
   player.body.velocity.x = 400 * (cursors.right.isDown - cursors.left.isDown)
   player.body.velocity.y = 300 * (cursors.down.isDown - cursors.up.isDown) // lmao "up.isDown"
