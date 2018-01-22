@@ -2,6 +2,10 @@ import PIXI from 'expose-loader?PIXI!phaser-ce/build/custom/pixi.js'
 import p2 from 'expose-loader?p2!phaser-ce/build/custom/p2.js'
 import Phaser from 'expose-loader?Phaser!phaser-ce/build/custom/phaser-split.js'
 
+import {Tone} from '../audio'
+
+import {playTitleMusic} from '../audio/loops/title-screen'
+
 const game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-game', {preload, create, update})
 
 function preload () {
@@ -53,6 +57,8 @@ function create () {
   maxVelocity = -1200
   tMax = 120 // 120 seconds to max velocity
   acceleration = (maxVelocity - startVelocity) / tMax
+
+  playTitleMusic()
 }
 
 function update () {
@@ -71,7 +77,6 @@ function update () {
       boundsAlignH: 'right'
     })
     scoreDisplay.setTextBounds(0, 0, 800, 600)
-
   }
   if (secondsElapsed < tMax && Date.now() - startTime > secondsElapsed * 1000) {
     secondsElapsed++
