@@ -1,3 +1,7 @@
+body {
+  background-color: #111111;
+}
+
 #title {
   text-align: center;
   z-index: 999;
@@ -19,6 +23,7 @@
   min-height: 100vh;
   min-width: 100vw;
   z-index: -2;
+  opacity: .3;
 }
 
 

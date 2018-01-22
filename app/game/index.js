@@ -9,14 +9,20 @@ function preload () {
   game.load.image('space', 'assets/spacefield.png')
 
   // https://opengameart.org/content/space-ships-side-scroller
-  // i love this background but it doesn't tile neatly.
-  // could easily be fixed with a bit of color manipulation around either horizontal edge.
+  // I love this background but it doesn't tile neatly.
+  // This could easily be fixed
+  // by cutting the image in half down the middle,
+  // swapping the two sides so the seam is in the middle,
+  // and just using a bit of blur on the seam?
+  // That might be obvious, but it would probably be good enough for version 0.1!
   game.load.image('spaceship', 'assets/spaceship.png')
 }
 
 // Declaring outside create function so that these can be referenced in update function.
 // This is the first time I've used var in a whiiiiile!
 var title, startText, player, cursors, spacebar, background
+var startVelocity, currentVelocity, maxVelocity, tMax, startTime
+var acceleration, secondsElapsed, scoreDisplay, score
 
 function create () {
   game.physics.startSystem(Phaser.Physics.ARCADE)
@@ -42,15 +48,39 @@ function create () {
   spacebar = game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR)
   game.input.keyboard.addKeyCapture(Phaser.KeyCode.SPACEBAR)
   // console.log('spacebar:', spacebar)
+
+  startVelocity = -5 // 5 px/s left
+  maxVelocity = -1200
+  tMax = 120 // 120 seconds to max velocity
+  acceleration = (maxVelocity - startVelocity) / tMax
 }
 
 function update () {
   // if (spacebar.isDown) console.log('spacebar is down!')
-  if (title && spacebar.isDown) {
+  if (title.alive && spacebar.isDown) {
     title.kill()
     startText.kill()
-    background.autoScroll(-5, 0) // background moves left at 5px/s
+    currentVelocity = startVelocity
+    background.autoScroll(currentVelocity, 0) // background moves left at 5px/s
+    startTime = Date.now()
+    secondsElapsed = 0
+    score = 0
+    scoreDisplay = game.add.text(0, 550, `SCORE: ${score} `, {
+      font: '12pt Monaco',
+      fill: 'white',
+      boundsAlignH: 'right'
+    })
+    scoreDisplay.setTextBounds(0, 0, 800, 600)
+
   }
-  player.body.velocity.x = 200 * (cursors.right.isDown - cursors.left.isDown)
-  player.body.velocity.y = 150 * (cursors.down.isDown - cursors.up.isDown) // lmao "up.isDown"
+  if (secondsElapsed < tMax && Date.now() - startTime > secondsElapsed * 1000) {
+    secondsElapsed++
+    currentVelocity += acceleration // sorry about the confusing signs :/
+    score -= currentVelocity
+    scoreDisplay.setText(`SCORE: ${score|0} `) // round to integer
+    console.log(secondsElapsed + ' s,', 'v = ' + -currentVelocity)
+    background.autoScroll(currentVelocity, 0)
+  }
+  player.body.velocity.x = 400 * (cursors.right.isDown - cursors.left.isDown)
+  player.body.velocity.y = 300 * (cursors.down.isDown - cursors.up.isDown) // lmao "up.isDown"
 }
