@@ -83,13 +83,32 @@ var maxBPM = 165, bpmAccel, bpmDisplay // can't go much higher than this without
 
 function reload() {window.location.reload()}
 
+function tinyAsteroids () {
+  for (let i=0; i<3; i++) {
+    let astY = 50 + Math.random()*700 | 0
+    let asteroid = asteroids.create(800, astY, 'tiny-ast')
+    asteroid.body.velocity.x = 20 + currentVelocity * 0.75 * Math.random()
+    asteroid.body.velocity.y = Math.random() * 100 - Math.random() * 100
+    asteroid.outOfBoundsKill = true
+  }
+}
+
+function bigAsteroid () {
+  let astSprite = ['med-ast', 'big-ast'][Math.random()*2|0]
+  let astY = 50 + Math.random()*700 | 0
+  let asteroid = asteroids.create(800, astY, astSprite)
+  asteroid.body.velocity.x = 20 + currentVelocity * Math.random()
+  asteroid.body.velocity.y = Math.random() * 100 - Math.random() * 100
+  asteroid.outOfBoundsKill = true
+}
+
 function update () {
   hitAsteroid = game.physics.arcade.collide(player, asteroids)
   if (hitAsteroid) {
     explosion.x = player.x, explosion.y = player.y
     explosion.play('boom')
     player.kill()
-    reload()
+    setTimeout(reload, 1000)
   }
 
   // if (spacebar.isDown) console.log('spacebar is down!')
@@ -133,29 +152,21 @@ function update () {
     Tone.Transport.bpm.rampTo(Tone.Transport.bpm.value + bpmAccel, 1)
     bpmDisplay.setText(`BPM: ${Tone.Transport.bpm.value.toFixed(1)}`)
 
-    let astSprite = ['med-ast', 'big-ast'][Math.random()*2|0]
-    let astY = 50 + Math.random()*700 | 0
-    let asteroid = asteroids.create(800, astY, astSprite)
-    asteroid.body.velocity.x = currentVelocity * 2
-    asteroid.body.velocity.y = Math.random() * 100 - Math.random() * 100
-    asteroid.outOfBoundsKill = true
+    
+
+    if (Tone.Transport.bpm.value > 130) tinyAsteroids()
   }
 
   if (player.alive && secondsElapsed >= tMax && Date.now() - startTime > secondsElapsed * 1000) {
     secondsElapsed++
+    if (Tone.Transport.bpm.value > 130) tinyAsteroids()
   }
 
   if (!guitarOn && Tone.Transport.bpm.value > 115) addGuitar()
   if (!hatOn && Tone.Transport.bpm.value > 130) addHat()
 
   if (player.alive && Tone.Transport.bpm.value > 130) {
-    for (let i=0; i<3; i++) {
-    let astY = 50 + Math.random()*700 | 0
-    let asteroid = asteroids.create(800, astY, 'tiny-ast')
-    asteroid.body.velocity.x = currentVelocity * 2
-    asteroid.body.velocity.y = Math.random() * 100 - Math.random() * 100
-    asteroid.outOfBoundsKill = true
-    }
+    
   }
 
   player.body.velocity.x = 400 * (cursors.right.isDown - cursors.left.isDown)
