@@ -1,3 +1,9 @@
+
+// this was a fun experiment, but i need more practice with the Bohlen-Pierce
+// scale before i can really use it?
+
+
+
 import {Tone} from '../'
 
 // notice that we're only importing half of the snare,

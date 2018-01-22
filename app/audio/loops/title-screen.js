@@ -83,9 +83,18 @@ export function playTitleMusic() {
   Tone.Transport.stop()
   Tone.Transport.position = 0
   Tone.Transport.timeSignature = 4
+  Tone.Transport.swing = .2
   Tone.Transport.bpm.value = titleBPM
   Tone.Transport.loop = true
   Tone.Transport.loopEnd = loopLength
   titleMusic.start('1m').stop(loopLength)
   Tone.Transport.start()
+}
+
+export function stopTitleMusic() {
+  Tone.Transport.stop()
+  titleMusic.stop()
+  titleMusic.cancel()
+  titleMusic.mute = true
+  // how do you stop this loop?!!?
 }

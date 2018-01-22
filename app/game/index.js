@@ -4,7 +4,7 @@ import Phaser from 'expose-loader?Phaser!phaser-ce/build/custom/phaser-split.js'
 
 import {Tone} from '../audio'
 
-import {playTitleMusic, playIngameMusic} from '../audio/loops'
+import {playTitleMusic, stopTitleMusic, playIngameMusic, beginPsytrance, stopPsytrance, addGuitar, addHat, stopHat} from '../audio/loops'
 
 const game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-game', {preload, create, update})
 
@@ -20,6 +20,14 @@ function preload () {
   // and just using a bit of blur on the seam?
   // That might be obvious, but it would probably be good enough for version 0.1!
   game.load.image('spaceship', 'assets/spaceship.png')
+
+  // https://opengameart.org/content/2d-asteroid-sprite
+  game.load.image('tiny-ast', 'assets/asteroid1.png')
+  game.load.image('med-ast', 'assets/asteroid2.png')
+  game.load.image('big-ast', 'assets/asteroid3.png')
+
+  // https://opengameart.org/content/explosion
+  game.load.spritesheet('explosion', 'assets/explosion.png', 64, 64)
 }
 
 // Declaring outside create function so that these can be referenced in update function.
@@ -27,6 +35,8 @@ function preload () {
 var title, startText, player, cursors, spacebar, background
 var startVelocity, currentVelocity, maxVelocity, tMax, startTime
 var acceleration, secondsElapsed, scoreDisplay, score
+var guitarOn = false, hatOn = false
+var asteroids, explosion, hitAsteroid
 
 function create () {
   game.physics.startSystem(Phaser.Physics.ARCADE)
@@ -55,18 +65,36 @@ function create () {
 
   startVelocity = -5 // 5 px/s left
   maxVelocity = -1200
-  tMax = 30 // 120 seconds to max velocity
+  tMax = 90 // 120 seconds to max velocity
   acceleration = (maxVelocity - startVelocity) / tMax
 
   playTitleMusic()
+  guitarOn = false
+  hatOn = false
+
+  asteroids = game.add.group()
+  asteroids.enableBody = true
+
+  hitAsteroid = game.physics.arcade.collide(player, asteroids)
+
+  explosion = game.add.sprite(800,600, 'explosion')
+  explosion.animations.add('boom', [15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0], 10, false)
 }
 
-var maxBPM = 240, bpmAccel, bpmDisplay
+var maxBPM = 165, bpmAccel, bpmDisplay // can't go much higher than this without audio crackling
 
 function update () {
+  if (hitAsteroid) {
+    explosion.x = player.x, explosion.y = player.y
+    boom.play('boom')
+    player.kill()
+  }
+
   // if (spacebar.isDown) console.log('spacebar is down!')
   if (title.alive && spacebar.isDown) {
-    playIngameMusic()
+    // playIngameMusic()
+    stopTitleMusic()
+    beginPsytrance()
 
     title.kill()
     startText.kill()
@@ -83,7 +111,7 @@ function update () {
     scoreDisplay.setTextBounds(0, 0, 800, 600)
 
     bpmAccel = (maxBPM - Tone.Transport.bpm.value) / tMax
-    console.log(bpmAccel)
+    // console.log(bpmAccel)
     bpmDisplay = game.add.text(0, 0, `BPM: ${Tone.Transport.bpm.value} `, {
       font: '12pt Monaco',
       fill: 'white',
@@ -92,17 +120,20 @@ function update () {
     bpmDisplay.setTextBounds(0, 0, 800, 600)
 
   }
-  if (secondsElapsed < tMax && Date.now() - startTime > secondsElapsed * 1000) {
+  if (player.alive && secondsElapsed < tMax && Date.now() - startTime > secondsElapsed * 1000) {
     secondsElapsed++
     currentVelocity += acceleration // sorry about the confusing signs :/
     score -= currentVelocity
     scoreDisplay.setText(`SCORE: ${score|0} `) // round to integer
-    console.log(secondsElapsed + ' s,', 'v = ' + -currentVelocity)
+    // console.log(secondsElapsed + ' s,', 'v = ' + -currentVelocity)
     background.autoScroll(currentVelocity, 0)
 
-    Tone.Transport.bpm.value += bpmAccel
+    Tone.Transport.bpm.rampTo(Tone.Transport.bpm.value + bpmAccel, 1)
     bpmDisplay.setText(`BPM: ${Tone.Transport.bpm.value.toFixed(1)}`)
   }
+  if (!guitarOn && Tone.Transport.bpm.value > 115) addGuitar()
+  if (!hatOn && Tone.Transport.bpm.value > 130) addHat()
+
   player.body.velocity.x = 400 * (cursors.right.isDown - cursors.left.isDown)
   player.body.velocity.y = 300 * (cursors.down.isDown - cursors.up.isDown) // lmao "up.isDown"
 }
