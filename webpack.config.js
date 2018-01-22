@@ -10,6 +10,8 @@ const p2 = path.join(phaserModule, 'build/custom/p2.js')
 
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
+const webpack = require('webpack')
+
 const extractSass = new ExtractTextPlugin({
   filename: './public/css/styles.css',
   // disable: process.env.NODE_ENV === 'development'
@@ -22,7 +24,6 @@ module.exports = {
     filename: './public/bundle.js'
   },
   context: __dirname,
-  devtool: 'source-map',
   resolve: {
     extensions: ['.js', '.jsx']
   },
@@ -50,15 +51,15 @@ module.exports = {
             // },
             {
               loader: 'css-loader',
-              options: { sourceMap: true }
+              options: { sourceMap: false }
             },
             {
               loader: 'resolve-url-loader',
-              options: { sourceMap: true }
+              options: { sourceMap: false }
             },
             {
               loader: 'sass-loader',
-              options: { sourceMap: true }
+              options: { sourceMap: false }
             }
           ],
           fallback: 'style-loader'
@@ -67,6 +68,11 @@ module.exports = {
     ]
   },
   plugins: [
-    extractSass
+    extractSass,
+    new webpack.DefinePlugin({
+      'process.env': {
+        'NODE_ENV': JSON.stringify('production')
+      }
+    })
   ]
 };
