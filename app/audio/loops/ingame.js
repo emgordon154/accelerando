@@ -8,50 +8,56 @@ import {Tone} from '../'
 //   so our drums are just volume-enveloped white noise :/"
 // aesthetic
 
-import {bass, kick, snareNoise, pad, square} from '../instruments'
+import {bass, kick, snareHit, snareNoise, pad, square} from '../instruments'
 
 import {chromaticETScale} from '../tuning'
 
-// I think I'll go with the familiar 12-TET for the title screen,
-// and then go nonstandard to induce discomfort only once the game's started. :)
-// ooh, and maybe i'll do an odd time signature too! 4/4 here though
-const key = 'C3'
+// Hmm...can you say... odd tuning and odd time signature? :D
+const key = 'G3'
 
-const scale = chromaticETScale(1, 12, 2)
+const scale = chromaticETScale(1, 13, 3)
 
 const loopLength = '4m'
-const titleBPM = 86
+const inGameBPM = 60
 
 function kickAndSnare(time) {
   const kickFreq = 'C2'; // necessary semicolons ;(
 
-  [time, `${time} + 2n`]
-    .forEach(onBeat => kick.triggerAttackRelease(kickFreq, '8n', onBeat));
+  const onBeats = [time, `${time} + 2n`]
+  const offBeats = [`${time} + 4n`, `${time} + 2n + 4n`, `${time} + 1n`]
 
-  [`${time} + 4n`, `${time} + 2n + 4n`]
-  
-    .forEach(offBeat => snareNoise.triggerAttackRelease('8n', offBeat))
+  const beats = onBeats.concat(offBeats)
+
+  beats
+    .forEach(beat => kick.triggerAttackRelease(kickFreq, '8n', beat));
+
+  offBeats
+    .forEach(offBeat => {
+      snareHit.triggerAttackRelease('G2', '8n', offBeat, 0.5)
+      snareNoise.triggerAttackRelease('8n', offBeat)
+    })
 }
 
 function bassMeasure(time, rootNote=key) {
   const rootOctave = Math.random() > .5 ? 1 : 2
   bass.triggerAttackRelease(`${rootNote} / ${rootOctave}`, '4n', time);
 
-  [`${time} + 4n`, `${time} + 2n`, `${time} + 2n + 4n`]
+  [`${time} + 4n`, `${time} + 2n`, `${time} + 2n + 4n`, `${time} + 2n`]
     .forEach(beat => {
-      // using empty array slots as shorthand for "no change"
-      const ratioToRoot = [.5, scale[2]/2, scale[5], scale[5]/2, scale[7], scale[7]/2, scale[10],,,,,][Math.random()*10|0]
-      const syncopation = ['+8t', '-8t', '+8n','-8n',,,,,,][Math.random()*10|0]
+      // using undefined as shorthand for "no change"
+      const ratioToRoot = [1/3, scale[4], scale[7], scale[7]/3, scale[10]/3][Math.random()*10|0]
+      const syncopation = ['+8t', '+8n', '+4t'][Math.random()*10|0]
       bass.triggerAttackRelease(`${rootNote} * ${ratioToRoot||1}`, '4n', `${time} ${syncopation||''}`)
     })
 }
 
 function padMeasure(time, rootNote=key) {
-  pad.triggerAttackRelease(`${rootNote}`, '1m', time, Math.random())
-  pad.triggerAttackRelease(`${rootNote} * ${scale[4]}`, '1m', time, Math.random() * .7)
-  pad.triggerAttackRelease(`${rootNote} * ${scale[7]}`, '1m', time, Math.random() * .9)
+  const vol = .6
+  pad.triggerAttackRelease(`${rootNote}`, '1m', time, Math.random() * vol)
+  pad.triggerAttackRelease(`${rootNote} * ${scale[4]}`, '1m', time, Math.random() * .7 * vol)
+  pad.triggerAttackRelease(`${rootNote} * ${scale[7]}`, '1m', time, Math.random() * .9 * vol)
   if (Math.random() < .3) 
-    pad.triggerAttackRelease(`${rootNote} * ${scale[10]}`, '1m', time, Math.random() * .4)
+    pad.triggerAttackRelease(`${rootNote} * ${scale[10]}`, '1m', time, Math.random() * .4 * vol)
 }
 
 function arpMeasure(time, rootNote=key) {
@@ -65,27 +71,27 @@ function arpMeasure(time, rootNote=key) {
 
 function melodicInstruments(time, rootNote) {
   bassMeasure(time, rootNote)
-  padMeasure(time, `${rootNote} * 2`)
-  arpMeasure(time, `${rootNote} * 2`)
+  padMeasure(time, `${rootNote} * 3`)
+  arpMeasure(time, `${rootNote} * 3`)
 }
 
-const titleMusic = new Tone.Loop(time => {
+const inGameMusic = new Tone.Loop(time => {
   [time, `${time} + 1m`, `${time} + 2m`, `${time} + 3m`]
     .forEach((measure, i) => {
       kickAndSnare(measure)
-      const chordRoot = [1, 1, scale[5], scale[7]][i]
+      const chordRoot = [1, 1, scale[4], scale[7]][i]
       melodicInstruments(measure, `${key} * ${chordRoot}`)
     });
   
 }, loopLength)
 
-export function playTitleMusic() {
+export function playIngameMusic() {
   Tone.Transport.stop()
-  Tone.Transport.position = 0
-  Tone.Transport.timeSignature = 4
-  Tone.Transport.bpm.value = titleBPM
+  Tone.Transport.bpm.value = inGameBPM
+  Tone.Transport.timeSignature = 5
+  Tone.Transport.swing = .3
   Tone.Transport.loop = true
   Tone.Transport.loopEnd = loopLength
-  titleMusic.start('1m').stop(loopLength)
+  inGameMusic.start('1m').stop(loopLength)
   Tone.Transport.start()
 }

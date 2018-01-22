@@ -4,7 +4,7 @@ import Phaser from 'expose-loader?Phaser!phaser-ce/build/custom/phaser-split.js'
 
 import {Tone} from '../audio'
 
-import {playTitleMusic} from '../audio/loops/title-screen'
+import {playTitleMusic, playIngameMusic} from '../audio/loops'
 
 const game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-game', {preload, create, update})
 
@@ -55,15 +55,19 @@ function create () {
 
   startVelocity = -5 // 5 px/s left
   maxVelocity = -1200
-  tMax = 120 // 120 seconds to max velocity
+  tMax = 30 // 120 seconds to max velocity
   acceleration = (maxVelocity - startVelocity) / tMax
 
   playTitleMusic()
 }
 
+var maxBPM = 240, bpmAccel, bpmDisplay
+
 function update () {
   // if (spacebar.isDown) console.log('spacebar is down!')
   if (title.alive && spacebar.isDown) {
+    playIngameMusic()
+
     title.kill()
     startText.kill()
     currentVelocity = startVelocity
@@ -77,6 +81,16 @@ function update () {
       boundsAlignH: 'right'
     })
     scoreDisplay.setTextBounds(0, 0, 800, 600)
+
+    bpmAccel = (maxBPM - Tone.Transport.bpm.value) / tMax
+    console.log(bpmAccel)
+    bpmDisplay = game.add.text(0, 0, `BPM: ${Tone.Transport.bpm.value} `, {
+      font: '12pt Monaco',
+      fill: 'white',
+      boundsAlignH: 'left'
+    })
+    bpmDisplay.setTextBounds(0, 0, 800, 600)
+
   }
   if (secondsElapsed < tMax && Date.now() - startTime > secondsElapsed * 1000) {
     secondsElapsed++
@@ -85,6 +99,9 @@ function update () {
     scoreDisplay.setText(`SCORE: ${score|0} `) // round to integer
     console.log(secondsElapsed + ' s,', 'v = ' + -currentVelocity)
     background.autoScroll(currentVelocity, 0)
+
+    Tone.Transport.bpm.value += bpmAccel
+    bpmDisplay.setText(`BPM: ${Tone.Transport.bpm.value.toFixed(1)}`)
   }
   player.body.velocity.x = 400 * (cursors.right.isDown - cursors.left.isDown)
   player.body.velocity.y = 300 * (cursors.down.isDown - cursors.up.isDown) // lmao "up.isDown"
