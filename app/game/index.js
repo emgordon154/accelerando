@@ -79,7 +79,7 @@ function create () {
   explosion.animations.add('boom', [15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0], 10, false)
 }
 
-var maxBPM = 165, bpmAccel, bpmDisplay // can't go much higher than this without audio crackling
+var maxBPM = 160, bpmAccel, bpmDisplay // can't go much higher than this without audio crackling
 
 function reload() {window.location.reload()}
 
@@ -152,7 +152,7 @@ function update () {
     Tone.Transport.bpm.rampTo(Tone.Transport.bpm.value + bpmAccel, 1)
     bpmDisplay.setText(`BPM: ${Tone.Transport.bpm.value.toFixed(1)}`)
 
-    
+    bigAsteroid()
 
     if (Tone.Transport.bpm.value > 130) tinyAsteroids()
   }
