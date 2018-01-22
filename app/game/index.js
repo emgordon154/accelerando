@@ -90,6 +90,7 @@ function tinyAsteroids () {
     asteroid.body.velocity.x = 20 + currentVelocity * 0.75 * Math.random()
     asteroid.body.velocity.y = Math.random() * 100 - Math.random() * 100
     asteroid.outOfBoundsKill = true
+    asteroid.rotation = Math.random() - Math.random()
   }
 }
 
@@ -100,6 +101,7 @@ function bigAsteroid () {
   asteroid.body.velocity.x = 20 + currentVelocity * Math.random()
   asteroid.body.velocity.y = Math.random() * 100 - Math.random() * 100
   asteroid.outOfBoundsKill = true
+  asteroid.rotation = Math.random() - Math.random()
 }
 
 function update () {
