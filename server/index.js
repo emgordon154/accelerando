@@ -3,7 +3,7 @@
 const express = require('express')
 const path = require('path')
 
-if (process.env.NODE_ENV === 'development') const volleyball = require('volleyball')
+if (process.env.NODE_ENV === 'development') {const volleyball = require('volleyball')}
 
 const app = express()
 
