@@ -1,3 +1,5 @@
+// decided not to use this for now
+
 import {default as Tone} from 'Tone'
 
 const basskickComp = new Tone.Volume().toMaster()
